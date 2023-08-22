@@ -102,7 +102,7 @@ def draw_th1(h1, h2, f, w, label1, label2, c):
        leg.AddEntry(h2.GetPtr(),label2,"L")
        leg.Draw()
 
-       c.SaveAs("plots/"+f+"_weighted.png")
+       c.SaveAs(output_folder+"/plots/"+f+"_weighted.png")
 
 def nano_to_DF(path,treename):
    frame = RDataFrame(treename, path+"/*.root")
@@ -115,7 +115,7 @@ def fold_df(df, label, nfolds, columns):
    for f in range(0,nfolds):
       fold = str(f)
       df.Filter("evt % "+str(nfolds)+" == "+fold, "Select events for fold "+fold)\
-        .Snapshot("Events", "fold_" + fold + "_"+label+".root", columns)
+        .Snapshot("Events", output_folder+"/fold_" + fold + "_"+label+".root", columns)
 
 def prepare_data_numpy(df_sig, df_bkg, variables):
 
@@ -193,14 +193,14 @@ if __name__ == "__main__":
    signal_eta.Draw("Hist")
    upright_pad = canvas.cd(4)
    bkg_eta.Draw("Hist")
-   canvas.SaveAs("plots/muon_eta_pt.png")
+   canvas.SaveAs(output_folder+"/plots/muon_eta_pt.png")
    
    #plot
    rcanvas = ROOT.TCanvas("c", "c", 800, 800)
    signal_pt_eta.Draw("colz")
-   rcanvas.SaveAs("plots/signal_eta_pt.png")
+   rcanvas.SaveAs(output_folder+"/plots/signal_eta_pt.png")
    bkg_pt_eta.Draw("colz")
-   rcanvas.SaveAs("plots/bkg_eta_pt.png")
+   rcanvas.SaveAs(output_folder+"/plots/bkg_eta_pt.png")
    
    #normalise to same entries
    signal_pt_eta.Scale(1.0/signal_pt_eta.Integral())
@@ -211,7 +211,7 @@ if __name__ == "__main__":
    r_pt_eta.Divide(bkg_pt_eta.GetPtr())
    
    r_pt_eta.Draw("colz")
-   rcanvas.SaveAs("plots/ratio_eta_pt.png")
+   rcanvas.SaveAs(output_folder+"/plots/ratio_eta_pt.png")
 
    #apply reweighting
    df_bkg = df_bkg.Define("weight", ROOT.WeightsComputer(r_pt_eta), ["pt", "eta"])
@@ -230,10 +230,6 @@ if __name__ == "__main__":
        
    print("performed ",df_sig.GetNRuns()," loops")
 
-   #training
-
-   # from RDataFrame to numpy arrays for training
-   #x, y, w = prepare_data_numpy(df_sig, df_bkg, features+spectators)
   
    # from big RDataFrame to folds containing only needed features 
    fold_df(df_sig, "signal_10M", 5, features+spectators)

@@ -57,8 +57,8 @@ if __name__ == "__main__":
          print("Training fold ",str(fold))
 
          # Load data
-         x, y, w = load_data("fold_"+str(fold)+"_signal.root", "fold_"+str(fold)+"_background.root", features)
-         #x, y, w = load_data("fold_"+str(fold)+"_signal_10000evt.root", "fold_"+str(fold)+"_background_10000evt.root", features)
+         x, y, w = load_data(output_folder+"/fold_"+str(fold)+"_signal.root", output_folder+"/fold_"+str(fold)+"_background.root", features)
+         #x, y, w = load_data(output_folder+"/fold_"+str(fold)+"_signal_10000evt.root", output_folder+"/fold_"+str(fold)+"_background_10000evt.root", features)
 
          # Fit xgboost model
          bdt = XGBClassifier(objective='binary:logistic', max_depth=3, n_estimators=500)
@@ -66,13 +66,13 @@ if __name__ == "__main__":
  
          # Save model in TMVA format
          print("===Training done on ",x.shape[0],"events. Saving model in tmva_fold"+str(fold)+".root")
-         ROOT.TMVA.Experimental.SaveXGBoost(bdt, "myBDT", "tmva_xgboost_fold"+str(fold)+".root", num_inputs=x.shape[1])
+         ROOT.TMVA.Experimental.SaveXGBoost(bdt, "myBDT", output_folder+"/tmva_xgboost_fold"+str(fold)+".root", num_inputs=x.shape[1])
 
    if useTMVABDT:
 
       TMVA.Tools.Instance()
 
-      outputFile = TFile.Open("TMVA_BDT_ClassificationOutput.root", "RECREATE")
+      outputFile = TFile.Open(output_folder+"/TMVA_BDT_ClassificationOutput.root", "RECREATE")
 
  
       factory = TMVA.Factory(
@@ -88,8 +88,8 @@ if __name__ == "__main__":
       )
  
       loader = TMVA.DataLoader("dataset")
-      input_file_sig = TFile.Open("fold_0_signal_10M.root")
-      input_file_bkg = TFile.Open("fold_0_background_10M.root")
+      input_file_sig = TFile.Open(output_folder+"/fold_0_signal_10M.root")
+      input_file_bkg = TFile.Open(output_folder+"/fold_0_background_10M.root")
 
       # --- Register the training and test trees
       tree_sig = input_file_sig.Get("Events")

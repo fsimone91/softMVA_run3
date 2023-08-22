@@ -1,3 +1,5 @@
+output_folder = "/eos/user/f/fsimone/softMVA_run3"
+
 #features
 features = [
    "pt",
