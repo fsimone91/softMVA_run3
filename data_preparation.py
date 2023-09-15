@@ -84,7 +84,7 @@ def call_th1(df1, df2, f, w):
        h2 = df2.Histo1D((f, f, 50, x1, x2), f, w)
        return h1, h2
 
-def draw_th1(h1, h2, f, w, label1, label2, c):
+def draw_th1(h1, h2, f, label1, label2, c, name):
        h1.Scale(1.0/h1.Integral())
        h2.Scale(1.0/h2.Integral())
 
@@ -102,7 +102,7 @@ def draw_th1(h1, h2, f, w, label1, label2, c):
        leg.AddEntry(h2.GetPtr(),label2,"L")
        leg.Draw()
 
-       c.SaveAs(output_folder+"/plots/"+f+"_weighted.png")
+       c.SaveAs(output_folder+"/plots/"+f+"_"+name+".png")
 
 def nano_to_DF(path,treename):
    frame = RDataFrame(treename, path+"/*.root")
@@ -143,7 +143,7 @@ if __name__ == "__main__":
    #path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/523/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
    path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/524/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
    #df = nano_to_DF(path,"muons")
-   df = nano_to_DF(path,"muons").Range(10000000) #Note: range is not compatible with MT
+   df = nano_to_DF(path,"muons").Range(100000000) #Note: range is not compatible with MT
    
    #selections
    acceptance = "(pt>3.5 && abs(eta)<1.2) || (pt>2.0 && abs(eta)>1.2 && abs(eta)<2.4)"
@@ -152,7 +152,7 @@ if __name__ == "__main__":
    kaon = "(abs(sim_pdgId) == 321)"
    pi_mu_decay = "(abs(sim_pdgId) == 13 && abs(sim_mpdgId) == 211 && sim_type == 1)"
    k_mu_decay  = "(abs(sim_pdgId) == 13 && abs(sim_mpdgId) == 321 && sim_type == 1)"
-   muon = "abs(sim_pdgId) == 13 && sim_type>1"
+   muon = "abs(sim_pdgId) == 13 && sim_type==3"
    
    df = df.Filter(acceptance)
    df = df.Filter(basic_quality_cuts)
@@ -226,11 +226,11 @@ if __name__ == "__main__":
    for f in features:
        histo_pairs.append(call_th1(df_sig, df_bkg, f, "weight"))
    for index, histo_pair in enumerate(histo_pairs):
-       draw_th1(histo_pair[0], histo_pair[1], features[index], "weight", "signal", "bkg", c2)
+       draw_th1(histo_pair[0], histo_pair[1], features[index], "signal", "bkg", c2, "weighted")
        
    print("performed ",df_sig.GetNRuns()," loops")
 
   
    # from big RDataFrame to folds containing only needed features 
-   fold_df(df_sig, "signal_10M", 5, features+spectators)
+   fold_df(df_sig, "signal_jpsi_10M", 5, features+spectators)
    fold_df(df_bkg, "background_10M", 5, features+spectators)
