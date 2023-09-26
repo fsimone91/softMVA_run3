@@ -4,10 +4,13 @@ from ROOT import RDataFrame
 import numpy as np
 import pickle
 
+import psutil
+import time
+
 from utils import *
  
 # Enable multi-threading
-#ROOT.ROOT.EnableImplicitMT()
+ROOT.ROOT.EnableImplicitMT()
 
 # Batch mode
 ROOT.gROOT.SetBatch(ROOT.kTRUE)
@@ -140,10 +143,13 @@ def prepare_data_numpy(df_sig, df_bkg, variables):
     return x, y, w
 
 if __name__ == "__main__":
+
+   start = time.time()
+
    #path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/523/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
    path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/524/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
-   #df = nano_to_DF(path,"muons")
-   df = nano_to_DF(path,"muons").Range(100000000) #Note: range is not compatible with MT
+   df = nano_to_DF(path,"muons")
+   #df = nano_to_DF(path,"muons").Range(100000000) #Note: range is not compatible with MT
    
    #selections
    acceptance = "(pt>3.5 && abs(eta)<1.2) || (pt>2.0 && abs(eta)>1.2 && abs(eta)<2.4)"
@@ -230,7 +236,14 @@ if __name__ == "__main__":
        
    print("performed ",df_sig.GetNRuns()," loops")
 
-  
    # from big RDataFrame to folds containing only needed features 
    fold_df(df_sig, "signal_jpsi_10M", 5, features+spectators)
    fold_df(df_bkg, "background_10M", 5, features+spectators)
+
+   #monitor execution time
+   end = time.time()
+   print('execution time ', end-start)
+   #monitor CPU usage
+   print('CPU usage ', psutil.cpu_percent())
+   #monitoring memory usage
+   print('memory usage ', psutil.virtual_memory())
