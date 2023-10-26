@@ -1,5 +1,3 @@
-output_folder = "/eos/user/f/fsimone/softMVA_run3"
-
 #features
 features = [
    "pt",
@@ -15,6 +13,7 @@ features = [
    "glbNormChi2",
    "staRelChi2",
    "trkRelChi2",
+
 ##globalDeltaEtaPhi missing
 ##glbKink missing   
    "chi2LocalMomentum",
@@ -52,7 +51,11 @@ feature_dict = {
                 "chi2LocalMomentum": [0, 120],
                 "chi2LocalPosition": [0, 10],
                 "nStations": [0, 10],
+<<<<<<< HEAD
+                "muonStationsWithValidHits": [0, 10],
+=======
                 #"muonStationsWithValidHits": [0, 10],
+>>>>>>> softMVA_run3/main
                 "trkKink": [0, 35],
                 "segmentComp": [0, 1]
                }
@@ -75,6 +78,7 @@ feature_expression = {
                 "chi2LocalMomentum": "chi2LocalMomentum>150?150:chi2LocalMomentum",
                 "chi2LocalPosition": "chi2LocalPosition>50?50:chi2LocalPosition",
                 "nStations": "nStations",
+
                 #"muonStationsWithValidHits": "muonStationsWithValidHits",
                 "trkKink":   "log(1+trkKink)<3?3:log(1+trkKink)",
                 "segmentComp": "segmentComp"

@@ -158,7 +158,7 @@ if __name__ == "__main__":
    kaon = "(abs(sim_pdgId) == 321)"
    pi_mu_decay = "(abs(sim_pdgId) == 13 && abs(sim_mpdgId) == 211 && sim_type == 1)"
    k_mu_decay  = "(abs(sim_pdgId) == 13 && abs(sim_mpdgId) == 321 && sim_type == 1)"
-   muon = "abs(sim_pdgId) == 13 && sim_type==3"
+   muon = "abs(sim_pdgId) == 13 && sim_type>1"
    
    df = df.Filter(acceptance)
    df = df.Filter(basic_quality_cuts)
