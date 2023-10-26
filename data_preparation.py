@@ -4,12 +4,6 @@ from ROOT import RDataFrame
 import numpy as np
 import pickle
 
-<<<<<<< HEAD
-from utils import *
- 
-# Enable multi-threading
-#ROOT.ROOT.EnableImplicitMT()
-=======
 import psutil
 import time
 
@@ -17,7 +11,6 @@ from utils import *
  
 # Enable multi-threading
 ROOT.ROOT.EnableImplicitMT()
->>>>>>> softMVA_run3/main
 
 # Batch mode
 ROOT.gROOT.SetBatch(ROOT.kTRUE)
@@ -94,11 +87,7 @@ def call_th1(df1, df2, f, w):
        h2 = df2.Histo1D((f, f, 50, x1, x2), f, w)
        return h1, h2
 
-<<<<<<< HEAD
-def draw_th1(h1, h2, f, w, label1, label2, c):
-=======
 def draw_th1(h1, h2, f, label1, label2, c, name):
->>>>>>> softMVA_run3/main
        h1.Scale(1.0/h1.Integral())
        h2.Scale(1.0/h2.Integral())
 
@@ -116,11 +105,7 @@ def draw_th1(h1, h2, f, label1, label2, c, name):
        leg.AddEntry(h2.GetPtr(),label2,"L")
        leg.Draw()
 
-<<<<<<< HEAD
-       c.SaveAs("plots/"+f+"_weighted.png")
-=======
        c.SaveAs(output_folder+"/plots/"+f+"_"+name+".png")
->>>>>>> softMVA_run3/main
 
 def nano_to_DF(path,treename):
    frame = RDataFrame(treename, path+"/*.root")
@@ -133,11 +118,7 @@ def fold_df(df, label, nfolds, columns):
    for f in range(0,nfolds):
       fold = str(f)
       df.Filter("evt % "+str(nfolds)+" == "+fold, "Select events for fold "+fold)\
-<<<<<<< HEAD
-        .Snapshot("Events", "fold_" + fold + "_"+label+".root", columns)
-=======
         .Snapshot("Events", output_folder+"/fold_" + fold + "_"+label+".root", columns)
->>>>>>> softMVA_run3/main
 
 def prepare_data_numpy(df_sig, df_bkg, variables):
 
@@ -162,12 +143,6 @@ def prepare_data_numpy(df_sig, df_bkg, variables):
     return x, y, w
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-   #path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/523/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
-   path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/524/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
-   #df = nano_to_DF(path,"muons")
-   df = nano_to_DF(path,"muons").Range(10000000) #Note: range is not compatible with MT
-=======
 
    start = time.time()
 
@@ -175,7 +150,6 @@ if __name__ == "__main__":
    path = "/eos/cms/store/group/phys_bphys/bmm/bmm6/PostProcessing/FlatNtuples/524/muon_mva/InclusiveDileptonMinBias_TuneCP5Plus_13p6TeV_pythia8+Run3Summer22MiniAODv3-Pilot_124X_mcRun3_2022_realistic_v12-v5+MINIAODSIM/"
    df = nano_to_DF(path,"muons")
    #df = nano_to_DF(path,"muons").Range(100000000) #Note: range is not compatible with MT
->>>>>>> softMVA_run3/main
    
    #selections
    acceptance = "(pt>3.5 && abs(eta)<1.2) || (pt>2.0 && abs(eta)>1.2 && abs(eta)<2.4)"
@@ -184,11 +158,7 @@ if __name__ == "__main__":
    kaon = "(abs(sim_pdgId) == 321)"
    pi_mu_decay = "(abs(sim_pdgId) == 13 && abs(sim_mpdgId) == 211 && sim_type == 1)"
    k_mu_decay  = "(abs(sim_pdgId) == 13 && abs(sim_mpdgId) == 321 && sim_type == 1)"
-<<<<<<< HEAD
    muon = "abs(sim_pdgId) == 13 && sim_type>1"
-=======
-   muon = "abs(sim_pdgId) == 13 && sim_type==3"
->>>>>>> softMVA_run3/main
    
    df = df.Filter(acceptance)
    df = df.Filter(basic_quality_cuts)
@@ -229,24 +199,14 @@ if __name__ == "__main__":
    signal_eta.Draw("Hist")
    upright_pad = canvas.cd(4)
    bkg_eta.Draw("Hist")
-<<<<<<< HEAD
-   canvas.SaveAs("plots/muon_eta_pt.png")
-=======
    canvas.SaveAs(output_folder+"/plots/muon_eta_pt.png")
->>>>>>> softMVA_run3/main
    
    #plot
    rcanvas = ROOT.TCanvas("c", "c", 800, 800)
    signal_pt_eta.Draw("colz")
-<<<<<<< HEAD
-   rcanvas.SaveAs("plots/signal_eta_pt.png")
-   bkg_pt_eta.Draw("colz")
-   rcanvas.SaveAs("plots/bkg_eta_pt.png")
-=======
    rcanvas.SaveAs(output_folder+"/plots/signal_eta_pt.png")
    bkg_pt_eta.Draw("colz")
    rcanvas.SaveAs(output_folder+"/plots/bkg_eta_pt.png")
->>>>>>> softMVA_run3/main
    
    #normalise to same entries
    signal_pt_eta.Scale(1.0/signal_pt_eta.Integral())
@@ -257,11 +217,7 @@ if __name__ == "__main__":
    r_pt_eta.Divide(bkg_pt_eta.GetPtr())
    
    r_pt_eta.Draw("colz")
-<<<<<<< HEAD
-   rcanvas.SaveAs("plots/ratio_eta_pt.png")
-=======
    rcanvas.SaveAs(output_folder+"/plots/ratio_eta_pt.png")
->>>>>>> softMVA_run3/main
 
    #apply reweighting
    df_bkg = df_bkg.Define("weight", ROOT.WeightsComputer(r_pt_eta), ["pt", "eta"])
@@ -276,20 +232,6 @@ if __name__ == "__main__":
    for f in features:
        histo_pairs.append(call_th1(df_sig, df_bkg, f, "weight"))
    for index, histo_pair in enumerate(histo_pairs):
-<<<<<<< HEAD
-       draw_th1(histo_pair[0], histo_pair[1], features[index], "weight", "signal", "bkg", c2)
-       
-   print("performed ",df_sig.GetNRuns()," loops")
-
-   #training
-
-   # from RDataFrame to numpy arrays for training
-   #x, y, w = prepare_data_numpy(df_sig, df_bkg, features+spectators)
-  
-   # from big RDataFrame to folds containing only needed features 
-   fold_df(df_sig, "signal_10M", 5, features+spectators)
-   fold_df(df_bkg, "background_10M", 5, features+spectators)
-=======
        draw_th1(histo_pair[0], histo_pair[1], features[index], "signal", "bkg", c2, "weighted")
        
    print("performed ",df_sig.GetNRuns()," loops")
@@ -305,4 +247,3 @@ if __name__ == "__main__":
    print('CPU usage ', psutil.cpu_percent())
    #monitoring memory usage
    print('memory usage ', psutil.virtual_memory())
->>>>>>> softMVA_run3/main
