@@ -1,5 +1,7 @@
-import ROOT
+import xgboost
+from xgboost import XGBClassifier
 
+import ROOT
 TMVA = ROOT.TMVA
 TFile = ROOT.TFile
 
@@ -8,9 +10,6 @@ ROOT.ROOT.EnableImplicitMT()
 
 import numpy as np
 import pickle
-
-<<<<<<< HEAD
-from xgboost import XGBClassifier
 
 from utils import *
 
@@ -39,11 +38,6 @@ def load_data(signal_filename, background_filename, variables):
     w = np.hstack([w_sig, w_bkg]).ravel() 
 
     return x, y, w
-=======
-
-from utils import *
-
->>>>>>> softMVA_run3/main
 
 # Set here preferred MVA
 useXgboost = False
@@ -54,7 +48,6 @@ hasCPU = ROOT.gSystem.GetFromPipe("root-config --has-tmva-cpu") == "yes"
 
 if __name__ == "__main__":
 
-<<<<<<< HEAD
    # NOTE load_data is not working for large sized dataframes due to memory alloc. issues 
    # The workflow is working fine for reduced samples
    if useXgboost:
@@ -64,8 +57,8 @@ if __name__ == "__main__":
          print("Training fold ",str(fold))
 
          # Load data
-         x, y, w = load_data("fold_"+str(fold)+"_signal.root", "fold_"+str(fold)+"_background.root", features)
-         #x, y, w = load_data("fold_"+str(fold)+"_signal_10000evt.root", "fold_"+str(fold)+"_background_10000evt.root", features)
+         x, y, w = load_data(output_folder+"/fold_"+str(fold)+"_signal.root", output_folder+"/fold_"+str(fold)+"_background.root", features)
+         #x, y, w = load_data(output_folder+"/fold_"+str(fold)+"_signal_10000evt.root", output_folder+"/fold_"+str(fold)+"_background_10000evt.root", features)
 
          # Fit xgboost model
          bdt = XGBClassifier(objective='binary:logistic', max_depth=3, n_estimators=500)
@@ -73,19 +66,13 @@ if __name__ == "__main__":
  
          # Save model in TMVA format
          print("===Training done on ",x.shape[0],"events. Saving model in tmva_fold"+str(fold)+".root")
-         ROOT.TMVA.Experimental.SaveXGBoost(bdt, "myBDT", "tmva_xgboost_fold"+str(fold)+".root", num_inputs=x.shape[1])
+         ROOT.TMVA.Experimental.SaveXGBoost(bdt, "myBDT", output_folder+"/tmva_xgboost_fold"+str(fold)+".root", num_inputs=x.shape[1])
 
-=======
->>>>>>> softMVA_run3/main
    if useTMVABDT:
 
       TMVA.Tools.Instance()
 
-<<<<<<< HEAD
-      outputFile = TFile.Open("TMVA_BDT_ClassificationOutput.root", "RECREATE")
-=======
       outputFile = TFile.Open(output_folder+"/TMVA_BDT_ClassificationOutput.root", "RECREATE")
->>>>>>> softMVA_run3/main
 
  
       factory = TMVA.Factory(
@@ -100,15 +87,9 @@ if __name__ == "__main__":
           Correlations=False,
       )
  
-<<<<<<< HEAD
       loader = TMVA.DataLoader("dataset")
-      input_file_sig = TFile.Open("fold_0_signal_10M.root")
-      input_file_bkg = TFile.Open("fold_0_background_10M.root")
-=======
-      loader = TMVA.DataLoader("dataset_26aug23")
-      input_file_sig = TFile.Open(output_folder+"/fold_0_signal_jpsi_10M.root")
+      input_file_sig = TFile.Open(output_folder+"/fold_0_signal_10M.root")
       input_file_bkg = TFile.Open(output_folder+"/fold_0_background_10M.root")
->>>>>>> softMVA_run3/main
 
       # --- Register the training and test trees
       tree_sig = input_file_sig.Get("Events")
@@ -134,13 +115,10 @@ if __name__ == "__main__":
       # Input features
       for f in features:
          loader.AddVariable(feature_expression[f], f, "", 'F')
-<<<<<<< HEAD
-=======
 
-      # NOTE: TMVA::Experimental::RReader does not support spectator variables
->>>>>>> softMVA_run3/main
-      for s in spectators:
-         loader.AddSpectator(s)
+      # TMVA::Experimental::RReader does not support spectator variables
+      #for s in spectators:
+      #   loader.AddSpectator(s)
  
       # Tell the factory how to use the training and testing events
       # If no numbers of events are given, half of the events in the tree are used
@@ -174,21 +152,13 @@ if __name__ == "__main__":
          V=False,
          NTrees=1000,
          MinNodeSize="2.5%",
-<<<<<<< HEAD
          MaxDepth=8,
-=======
-         MaxDepth=6,
->>>>>>> softMVA_run3/main
          BoostType="RealAdaBoost",
          AdaBoostBeta=0.3,
          UseBaggedBoost=True,
          BaggedSampleFraction=0.1,
          SeparationType="GiniIndex",
-<<<<<<< HEAD
-         nCuts=-1,
-=======
          nCuts=100,
->>>>>>> softMVA_run3/main
       )
   
       # Train Methods

@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+output_folder = "/eos/user/f/fsimone/softMVA_run3"
+
+>>>>>>> softMVA_run3/main
 #features
 features = [
    "pt",
@@ -13,10 +18,19 @@ features = [
    "glbNormChi2",
    "staRelChi2",
    "trkRelChi2",
+<<<<<<< HEAD
    
    "chi2LocalMomentum",
    "chi2LocalPosition",
    "nStations",
+=======
+##globalDeltaEtaPhi missing
+##glbKink missing   
+   "chi2LocalMomentum",
+   "chi2LocalPosition",
+   "nStations",
+   #"muonStationsWithValidHits",
+>>>>>>> softMVA_run3/main
    "trkKink",
    "segmentComp"
 ]
@@ -48,7 +62,11 @@ feature_dict = {
                 "chi2LocalMomentum": [0, 120],
                 "chi2LocalPosition": [0, 10],
                 "nStations": [0, 10],
+<<<<<<< HEAD
                 "muonStationsWithValidHits": [0, 10],
+=======
+                #"muonStationsWithValidHits": [0, 10],
+>>>>>>> softMVA_run3/main
                 "trkKink": [0, 35],
                 "segmentComp": [0, 1]
                }
@@ -71,7 +89,38 @@ feature_expression = {
                 "chi2LocalMomentum": "chi2LocalMomentum>150?150:chi2LocalMomentum",
                 "chi2LocalPosition": "chi2LocalPosition>50?50:chi2LocalPosition",
                 "nStations": "nStations",
+<<<<<<< HEAD
                 "muonStationsWithValidHits": "muonStationsWithValidHits",
                 "trkKink":   "log(1+trkKink)",
                 "segmentComp": "segmentComp"
                }
+=======
+                #"muonStationsWithValidHits": "muonStationsWithValidHits",
+                "trkKink":   "log(1+trkKink)<3?3:log(1+trkKink)",
+                "segmentComp": "segmentComp"
+               }
+
+#dictionary containing feature names in tau3mu ntuples
+feature_dict_tau3mu = {
+
+          "pt":               "mu_pt",            
+          "eta":              "mu_eta",
+                              
+          "trkLayers":        "mu_trackerLayersWithMeasurement",
+          "nPixels":          "mu_Numberofvalidpixelhits",
+          "trkValidFrac":     "mu_innerTrack_validFraction",
+          "nValidHits":       "mu_GLhitPattern_numberOfValidMuonHits",
+                                                                 
+          "staNormChi2":      "mu_outerTrack_normalizedChi2",
+          "trkNormChi2":      "mu_innerTrack_normalizedChi2",
+          "glbNormChi2":      "mu_GLnormChi2",
+          "staRelChi2":       "mu_combinedQuality_trkRelChi2",
+          "trkRelChi2":       "mu_combinedQuality_staRelChi2",
+                              
+          "chi2LocalMomentum":"mu_combinedQuality_chi2LocalMomentum",
+          "chi2LocalPosition":"mu_combinedQuality_chi2LocalPosition",
+          "nStations":        "mu_numberOfMatchedStations",
+          "trkKink":          "mu_combinedQuality_trkKink",
+          "segmentComp":      "mu_segmentCompatibility"
+}
+>>>>>>> softMVA_run3/main
